@@ -18,7 +18,7 @@ var log = function(message) {
 };
 
 log('Variety: A MongoDB Schema Analyzer');
-log('Version 1.5.0, released 14 May 2015');
+log('Version 1.5.0, Mod by Acetolyne released 14 May 2015');
 
 var dbs = [];
 var emptyDbs = [];
@@ -59,8 +59,8 @@ else if (typeof collection === 'undefined') {
         'Please see https://github.com/variety/variety for details.';
 }
 
-for (var curCol in collArr) { //Begin the loop of supplied collection names
-  collection = collArr[curCol];
+for (var curColl in collArr) { //Begin the loop of supplied collection names
+  collection = collArr[curColl];
 
   if (db[collection].count() === 0) {
     throw 'The collection specified (' + collection + ') in the database specified ('+ db +') does not exist or is empty.\n'+
