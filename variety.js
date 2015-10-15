@@ -47,26 +47,23 @@ if(typeof knownDatabases !== 'undefined') { // not authorized user receives erro
 }
 
 var collNames = db.getCollectionNames().join(', ');
-if (collection instanceof Array) { //If the collection is an array do nothing
+if (typeof collection === 'undefined') {
+    collArr.push.apply(collArr, collNames.split(', '));
+}
+else if (collection instanceof Array) { //If the collection is an array do nothing
  collArr.push.apply(collArr, collection);
 }
 else if (typeof collection === 'string') { //If its a string turn it into an array for simplicity later
  collArr.push(collection);
 }
-else if (typeof collection === 'undefined') {
-  throw 'You have to supply a \'collection\' variable, à la --eval \'var collection = "animals"\'.\n'+
-        'Possible collection options for database specified: ' + collNames + '.\n'+
-        'Please see https://github.com/variety/variety for details.';
-}
+
 
 for (var curColl in collArr) { //Begin the loop of supplied collection names
-  collection = collArr[curColl];
-
+  var collection = collArr[curColl];
   if (db[collection].count() === 0) {
-    throw 'The collection specified (' + collection + ') in the database specified ('+ db +') does not exist or is empty.\n'+
-        'Possible collection options for database specified: ' + collNames + '.';
+    log('The collection specified (' + collection + ') in the database specified ('+ db +') does not exist or is empty.\n');
+    continue;
   }
-
   var readConfig = function(configProvider) {
     var config = {};
     var read = function(name, defaultValue) {
@@ -74,7 +71,7 @@ for (var curColl in collArr) { //Begin the loop of supplied collection names
       config[name] = value;
       log('Using '+name+' of ' + tojson(value));
     };
-    read('collection', null);
+    read('collection', collection);
     read('query', {});
     read('limit', db[config.collection].find(config.query).count());
     read('maxDepth', 99);
